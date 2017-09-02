@@ -1,0 +1,278 @@
+### asset  资产信息表
+asset_id(pk)
+cabinet_id(fk)
+asset_type
+asset_name
+asset_sn
+asset_manufactory（制造商）
+management_ip
+contract_id
+asset_trade_date（购买时间）
+asset_expire_date（过保时间）
+asset_price（资产单价）
+business_id（所属业务线）
+tags
+asset_admin（资产管理员）
+asset_status
+asset_desc
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+asset_type_choices = (
+    ('server', u'服务器'),
+    ('networkdevice', u'网络设备'),
+    ('storagedevice', u'存储设备'),
+    ('securitydevice', u'安全设备'),
+    ('securitydevice', u'机房设备'),
+    # ('switch', u'交换机'),
+    # ('router', u'路由器'),
+    # ('firewall', u'防火墙'),
+    # ('storage', u'存储设备'),
+    # ('NLB', u'NetScaler'),
+    # ('wireless', u'无线AP'),
+    ('software', u'软件资产'),
+    # ('others', u'其它类'),
+)
+
+asset_status_choices = ((0, '在线'),
+                  (1, '已下线'),
+                  (2, '未知'),
+                  (3, '故障'),
+                  (4, '备用'),
+)
+
+
+### server 服务器表
+asset_id(pk)
+server_type（服务器类型）
+created_by（auto|manual）
+hosted_on
+server_model（服务器型号）
+raid_type（raid卡类型）
+os_type
+os_distribution
+os_release
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+server_type_choices = (
+    (0, 'PC服务器'),
+    (1, '刀片机'),
+    (2, '小型机'),
+)
+created_by_choices = (
+    ('auto', 'Auto'),
+    ('manual', 'Manual'),
+)
+
+### securitydevice """安全设备"""
+asset_id(pk)
+securitydevice_type
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+securitydevice_type_choices = (
+    (0, '防火墙'),
+    (1, '入侵检测设备'),
+    (2, '互联网网关'),
+    (4, '运维审计系统'),
+)
+
+
+### networkdevice 网络设备
+asset_id(pk)
+networkdevice_type
+vlan_ip
+intranet_ip(内网IP)
+model(型号)
+firmware
+port_num(端口个数)
+device_detail(设置详细配置, text)
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+networkdevice_type_choices = (
+    (0, '路由器'),
+    (1, '交换机'),
+    (2, '负载均衡'),
+    (4, 'VPN设备'),
+)
+
+
+### software(models.Model):
+software_id(pk)
+software_type
+license_num（授权数）
+version（软件/系统版本）
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+software_type_choices = (
+    (0, 'OS'),
+    (1, '办公\开发软件'),
+    (2, '业务软件'),
+)
+
+
+### cpu CPU组件
+asset_id(pk)
+cpu_model(CPU型号)
+cpu_count(物理cpu个数)
+cpu_core_count(cpu核数)
+cpu_desc
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+
+### ram 内存组件
+asset_id(pk)
+ram_sn(SN号)
+ram_model
+ram_slot(插槽)
+ram_capacity(内存大小(MB))
+ram_desc
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+### disk 硬盘组件
+asset_id(pk)
+disk_sn
+disk_slot(插槽位)
+disk_model(磁盘型号)
+disk_capacity(磁盘容量)
+iface_type(接口类型)
+disk_desc
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+disk_iface_choice = (
+    ('SATA', 'SATA'),
+    ('SAS', 'SAS'),
+    ('SCSI', 'SCSI'),
+    ('SSD', 'SSD'),
+)
+
+### nic 网卡组件
+asset_id(pk)
+nic_name(网卡名)
+nic_sn
+nic_mode(网卡型号)
+nic_macaddress
+nic_ipaddress
+nic_netmask
+nic_bonding
+nic_desc
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+
+### raid_adaptor Raid卡
+asset_id(pk)
+raid_sn
+raid_slot(插口)
+raid_desc
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+### manufactory 厂商
+manufactory_id(pk)
+manufactory_name
+support_phone
+manufactory_desc
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+
+### contract 合同
+contract_id
+contract_sn(合同号)
+contract_name(合同名称)
+contract_memo(备注)
+contract_price(合同金额)
+contract_detail(合同详细)
+start_date
+end_date
+license_num(license数量)
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+
+
+### tag 资产标签
+tag_id(pk)
+tag_name
+tag_creator
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+
+### eventlog 事件日志
+event_id(pk)
+asset_id(fk)
+event_name(事件名称)
+event_type
+event_component(事件子项)
+event_detail(事件详情)
+event_date(事件时间)
+user_id(事件源)
+event_desc
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+
+event_type_choices = (
+    (1, u'硬件变更'),
+    (2, u'新增配件'),
+    (3, u'设备下线'),
+    (4, u'设备上线'),
+    (5, u'定期维护'),
+    (6, u'业务上线\更新\变更'),
+    (7, u'其它'),
+)
+
+
+
+### newassetapprovalzone 新资产待审批区
+approval_id(pk)
+asset_sn(资产SN号)
+asset_type
+manufactory
+model
+ram_size
+cpu_model
+cpu_count
+cpu_core_count
+os_distribution
+os_type
+os_release
+asset_data(资产数据)
+report_time(汇报日期)
+approved_stauts(已批准|未批准)
+approved_by(批准人)
+approved_date(批准日期)
+is_del(nn,0=false,1=true)
+created_time(nn)
+updated_time(nn)
+asset_type_choices = (
+    ('server', u'服务器'),
+    ('switch', u'交换机'),
+    ('router', u'路由器'),
+    ('firewall', u'防火墙'),
+    ('storage', u'存储设备'),
+    ('NLB', u'NetScaler'),
+    ('wireless', u'无线AP'),
+    ('software', u'软件资产'),
+    ('others', u'其它类'),
+)
