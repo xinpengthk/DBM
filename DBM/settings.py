@@ -40,8 +40,8 @@ INSTALLED_APPS = [
     'xadmin',
     'crispy_forms',
     'reversion',
-    'metam',
-    'user',
+    'asset',
+    'account',
     'workorder',
 ]
 
