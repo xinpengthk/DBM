@@ -1,4 +1,5 @@
 
+#### for mysql 5.6.28
 
 use dbm_db;
 
@@ -135,43 +136,6 @@ CREATE TABLE sys_group_service (
   PRIMARY KEY (group_id, service_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '用户服务关联表';
 
-
-####### 产品相关表
-CREATE TABLE prd_product (
-  product_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  product_name varchar(32) NOT NULL COMMENT '产品线名称',
-  product_status tinyint(4) NOT NULL DEFAULT '1' COMMENT '产品线状态，0：未上线，1：已上线，2：已下线',
-  product_desc varchar(128) NOT NULL COMMENT '产品线描述',
-  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
-  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
-  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-  PRIMARY KEY (product_id),
-  UNIQUE INDEX uq_idx_prdname (product_name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '产品线表';
-
-CREATE TABLE prd_service (
-  service_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  product_id bigint(20) unsigned NOT NULL COMMENT '产品线ID，外键',
-  service_pro_manager bigint(20) unsigned NOT NULL COMMENT '该服务产品经理id，外键, sys_user',
-  service_dev_ledear bigint(20) unsigned NOT NULL COMMENT '该服务开发ledear id，外键, sys_user',
-  service_qa_ledear bigint(20) unsigned NOT NULL COMMENT '该服务测试ledear id，外键, sys_user',
-  service_name varchar(32) NOT NULL COMMENT '服务名称',
-  service_status tinyint(4) NOT NULL DEFAULT '1' COMMENT '服务状态，0：未上线，1：已上线，2：已下线',
-  service_desc varchar(128) NOT NULL COMMENT '服务描述',
-  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
-  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
-  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-  PRIMARY KEY (service_id),
-  INDEX idx_prdid (product_id),
-  INDEX idx_promanager (service_pro_manager),
-  INDEX idx_devledear (service_dev_ledear),
-  INDEX idx_qaledear (service_qa_ledear),
-  UNIQUE INDEX uq_idx_service_name (service_name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '产品线中服务表';
-
-
-
-
 ####### 主机相关表
 CREATE TABLE ma_hostroom (
   hostroom_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
@@ -247,6 +211,38 @@ CREATE TABLE ma_host_network_card (
 #  INDEX idx_host_id (host_id)
 #) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '机器配置表';
 
+####### 产品相关表
+CREATE TABLE prd_product (
+  product_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  product_name varchar(32) NOT NULL COMMENT '产品线名称',
+  product_status tinyint(4) NOT NULL DEFAULT '1' COMMENT '产品线状态，0：未上线，1：已上线，2：已下线',
+  product_desc varchar(128) NOT NULL COMMENT '产品线描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (product_id),
+  UNIQUE INDEX uq_idx_prdname (product_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '产品线表';
+
+CREATE TABLE prd_service (
+  service_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  product_id bigint(20) unsigned NOT NULL COMMENT '产品线ID，外键',
+  service_pro_manager bigint(20) unsigned NOT NULL COMMENT '该服务产品经理id，外键, sys_user',
+  service_dev_ledear bigint(20) unsigned NOT NULL COMMENT '该服务开发ledear id，外键, sys_user',
+  service_qa_ledear bigint(20) unsigned NOT NULL COMMENT '该服务测试ledear id，外键, sys_user',
+  service_name varchar(32) NOT NULL COMMENT '服务名称',
+  service_status tinyint(4) NOT NULL DEFAULT '1' COMMENT '服务状态，0：未上线，1：已上线，2：已下线',
+  service_desc varchar(128) NOT NULL COMMENT '服务描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (service_id),
+  INDEX idx_prdid (product_id),
+  INDEX idx_promanager (service_pro_manager),
+  INDEX idx_devledear (service_dev_ledear),
+  INDEX idx_qaledear (service_qa_ledear),
+  UNIQUE INDEX uq_idx_service_name (service_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '产品线中服务表';
 
 ####### DB相关表
 CREATE TABLE db_cluster (
