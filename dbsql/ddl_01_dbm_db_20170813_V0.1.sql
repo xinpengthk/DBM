@@ -34,10 +34,10 @@ CREATE TABLE sys_user (
   user_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   dept_id bigint(20) NOT NULL COMMENT '部门id，外键',
   title_id bigint(20) NOT NULL COMMENT '职务id，外键',
-  user_login_name varchar(32) NOT NULL COMMENT '用户登录名',
   user_realname varchar(32) NOT NULL COMMENT '用户真实姓名',
+  user_login_name varchar(32) NOT NULL COMMENT '用户登录名',
   user_pwd varchar(64) NOT NULL COMMENT '用户密码，加密',
-  user_type tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否为项目leader，1：是，0：否',
+  user_role tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否为项目leader，1：是，0：否',
   user_mgrid bigint(20) NOT NULL COMMENT '用户领导id，0为管理员用户，自外键',
   user_status tinyint(4) NOT NULL DEFAULT '1' COMMENT '用户激活状态，0：未激活，1：激活',
   user_email varchar(128) NOT NULL COMMENT '用户邮箱',
@@ -77,13 +77,14 @@ CREATE TABLE sys_user_group (
   PRIMARY KEY (group_id, user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '员工项目组关联表';
 
+
 ####### 权限相关表
 CREATE TABLE sys_menu (
   menu_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   menu_parent_id bigint(20) unsigned NOT NULL COMMENT '菜单父id',
   menu_name varchar(32) NOT NULL COMMENT '菜单名称',
   menu_url varchar(128) NOT NULL COMMENT '菜单url',
-  menu_priv varchar(32) NOT NULL COMMENT '菜单权限，CRUD...，逗号隔开',
+  menu_priv varchar(32) NOT NULL COMMENT '菜单权限，CRUD...',
   menu_sort tinyint(4) NOT NULL COMMENT '菜单排序',
   menu_status tinyint(4) NOT NULL DEFAULT '1' COMMENT '菜单状态，0：不可用，1：可用',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
@@ -135,6 +136,7 @@ CREATE TABLE sys_group_service (
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
   PRIMARY KEY (group_id, service_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '用户服务关联表';
+
 
 ####### 主机相关表
 CREATE TABLE ma_hostroom (
@@ -198,22 +200,23 @@ CREATE TABLE ma_host_network_card (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '网卡信息表';
 
 
-#### 暂时不做，参考CMDB
-#CREATE TABLE ma_host_profile (
-#  profile_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-#  host_id bigint(20) unsigned NOT NULL COMMENT '机器ID，外键',
-#  profile_type varchar(32) NOT NULL COMMENT '配置类型：mem, disk, eth, cpu',
-#  profile_
-#  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
-#  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
-#  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-#  PRIMARY KEY (profile_id),
-#  INDEX idx_host_id (host_id)
-#) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '机器配置表';
-
 ####### 产品相关表
+CREATE TABLE prd_business (
+  business_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  business_name varchar(32) NOT NULL COMMENT '业务线名称',
+  business_status tinyint(4) NOT NULL DEFAULT '1' COMMENT '业务线状态，0：未上线，1：已上线，2：已下线',
+  business_desc varchar(128) NOT NULL COMMENT '业务线描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (business_id),
+  UNIQUE INDEX uq_idx_prdname (business_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '业务线表';
+
+
 CREATE TABLE prd_product (
   product_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  business_id bigint(20) unsigned NOT NULL COMMENT '业务线ID，外键',
   product_name varchar(32) NOT NULL COMMENT '产品线名称',
   product_status tinyint(4) NOT NULL DEFAULT '1' COMMENT '产品线状态，0：未上线，1：已上线，2：已下线',
   product_desc varchar(128) NOT NULL COMMENT '产品线描述',
@@ -221,16 +224,18 @@ CREATE TABLE prd_product (
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
   PRIMARY KEY (product_id),
-  UNIQUE INDEX uq_idx_prdname (product_name)
+  UNIQUE INDEX uq_idx_prdname (product_name),
+  INDEX idx_business_id (business_id),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '产品线表';
 
 CREATE TABLE prd_service (
   service_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   product_id bigint(20) unsigned NOT NULL COMMENT '产品线ID，外键',
-  service_pro_manager bigint(20) unsigned NOT NULL COMMENT '该服务产品经理id，外键, sys_user',
+  service_name varchar(32) NOT NULL COMMENT '服务名称',
+  service_pdm bigint(20) unsigned NOT NULL COMMENT '该服务项目经理id，外键, sys_user',
+  service_pjm bigint(20) unsigned NOT NULL COMMENT '该服务产品经理id，外键, sys_user',
   service_dev_ledear bigint(20) unsigned NOT NULL COMMENT '该服务开发ledear id，外键, sys_user',
   service_qa_ledear bigint(20) unsigned NOT NULL COMMENT '该服务测试ledear id，外键, sys_user',
-  service_name varchar(32) NOT NULL COMMENT '服务名称',
   service_status tinyint(4) NOT NULL DEFAULT '1' COMMENT '服务状态，0：未上线，1：已上线，2：已下线',
   service_desc varchar(128) NOT NULL COMMENT '服务描述',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
@@ -238,11 +243,14 @@ CREATE TABLE prd_service (
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
   PRIMARY KEY (service_id),
   INDEX idx_prdid (product_id),
-  INDEX idx_promanager (service_pro_manager),
+  INDEX idx_pdm (service_pdm),
+  INDEX idx_pjm (service_pdm),
   INDEX idx_devledear (service_dev_ledear),
   INDEX idx_qaledear (service_qa_ledear),
   UNIQUE INDEX uq_idx_service_name (service_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '产品线中服务表';
+
+
 
 ####### DB相关表
 CREATE TABLE db_cluster (
@@ -273,12 +281,14 @@ CREATE TABLE db_group (
 
 CREATE TABLE db_instance (
   instance_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-#  host_id bigint(20) unsigned NOT NULL COMMENT '主机id，外键',
+  server_id bigint(20) unsigned NOT NULL COMMENT '主机id，外键',
   grp_id bigint(20) unsigned NOT NULL COMMENT '分组ID，外键',
   instance_name varchar(32) NOT NULL COMMENT '实例名称，DB001,DB002...',
   instance_type tinyint(4) NOT NULL DEFAULT '100' COMMENT '实例类型，100：MySQL官方社区版，101：REDIS，102：MONGODB，103：ORACLE',
   bind_ip varchar(15) NOT NULL COMMENT '绑定的内网IP',
   bind_port varchar(15) NOT NULL COMMENT '绑定的端口',
+  manage_ip varchar(15) NOT NULL COMMENT '管理IP',
+  web_ip varchar(15) NOT NULL COMMENT 'WEB IP',
   instance_role varchar(15) NOT NULL COMMENT '实例角色，master, slave',
   instance_status tinyint(4) NOT NULL DEFAULT '100' COMMENT '实例状态，100：正常服务，101：服务异常',
   instance_desc varchar(128) NOT NULL COMMENT '实例描述',
@@ -286,7 +296,7 @@ CREATE TABLE db_instance (
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
   PRIMARY KEY (instance_id),
-  INDEX idx_host_id (host_id),
+  INDEX idx_server_id (server_id),
   INDEX idx_grp_id (grp_id),
   UNIQUE INDEX uq_idx_instance_name (instance_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '实例信息表';
@@ -306,29 +316,35 @@ CREATE TABLE db_database (
   UNIQUE INDEX uq_idx_db_name (db_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '数据库表';
 
-
 CREATE TABLE db_user (
   dbuser_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  instance_id bigint(20) unsigned NOT NULL COMMENT '实例ID，外键',
+  dbinst_id bigint(20) unsigned NOT NULL COMMENT '实例ID，外键',
   dbuser_name varchar(32) NOT NULL COMMENT '数据库用户名称',
   dbuser_pwd varchar(64) NOT NULL COMMENT '数据库用户密码，加密存储',
   dbuser_type varchar(32) NOT NULL COMMENT 'web|admin|sys|general|readonly|rep|backup|monitor',
   dbuser_privs varchar(512) NOT NULL COMMENT '用户权限，信息',
-  dbuser_auth_range varchar(32) NOT NULL COMMENT '用户授权范围',
+  dbuser_ip_range varchar(15) NOT NULL COMMENT '用户授权IP范围',
+  dbuser_db_range varchar(64) NOT NULL COMMENT '用户授权数据库范围，多库使用逗号隔开',
   dbuser_desc varchar(128) NOT NULL COMMENT '数据库用户描述',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
   PRIMARY KEY (dbuser_id),
-  UNIQUE INDEX uq_idx_instance_id (instance_id, dbuser_name)
+  UNIQUE INDEX uq_idx_inst_id_dbname (dbinst_id, dbuser_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '数据库用户表';
 
 
 CREATE TABLE db_database_service (
-  db_id bigint(20) unsigned NOT NULL COMMENT '主键id 1',
-  service_id bigint(20) unsigned NOT NULL COMMENT '主键id 2',
+  id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  clu_id bigint(20) unsigned NOT NULL COMMENT '集群ID，外键',
+  grp_id bigint(20) unsigned NOT NULL COMMENT '分组ID，外键',
+  dbinst_id bigint(20) unsigned NOT NULL COMMENT '实例ID，外键',
+  db_id bigint(20) unsigned NOT NULL COMMENT '数据库ID，外键',
+  service_id bigint(20) unsigned NOT NULL COMMENT '服务ID，外键',
+  ds_status tinyint(4) NOT NULL DEFAULT '100' COMMENT '数据库状态，100：已下线，101：在线',
+  ds_desc varchar(128) NOT NULL COMMENT '描述',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-  PRIMARY KEY (db_id, service_id)
+  PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '数据库与服务关联表';
