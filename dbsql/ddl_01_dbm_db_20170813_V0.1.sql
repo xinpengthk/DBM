@@ -139,65 +139,131 @@ CREATE TABLE sys_group_service (
 
 
 ####### 主机相关表
-CREATE TABLE ma_hostroom (
-  hostroom_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  hostroom_name varchar(32) NOT NULL COMMENT '机房名称',
-  hostroom_addr varchar(32) NOT NULL COMMENT '机房地址',
-  hostroom_floor varchar(32) NOT NULL COMMENT '机房楼层',
-  hostroom_status tinyint(4) NOT NULL DEFAULT '100' COMMENT '机房状态，100：已上架，101：已下架',
-  hostroom_desc varchar(128) NOT NULL COMMENT '机房描述',
+
+CREATE TABLE ma_idc (
+  idc_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  idc_name varchar(32) NOT NULL COMMENT '机房名称',
+  idc_addr varchar(32) NOT NULL COMMENT '机房地址',
+  idc_floor varchar(32) NOT NULL COMMENT '机房楼层',
+  idc_status tinyint(4) NOT NULL DEFAULT '100' COMMENT '机房状态，100：已上架，101：已下架',
+  idc_desc varchar(128) NOT NULL COMMENT '机房描述',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-  PRIMARY KEY (hostroom_id),
-  UNIQUE INDEX uq_idx_hostroomname (hostroom_name)
+  PRIMARY KEY (idc_id),
+  UNIQUE INDEX uq_idx_idc_name (idc_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '机房信息表';
 
-CREATE TABLE ma_hostcabinet (
-  hostcabinet_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  hostroom_id bigint(20) unsigned NOT NULL COMMENT '机房id，外键',
-  hostcabinet_name varchar(32) NOT NULL COMMENT '机柜名称',
-  hostcabinet_status tinyint(4) NOT NULL DEFAULT '100' COMMENT '机柜状态，100：已上架，101：已下架，102：已满，103：有空闲',
-  hostcabinet_desc varchar(128) NOT NULL COMMENT '机柜描述',
+CREATE TABLE ma_cabinet (
+  cabinet_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  idc_id bigint(20) unsigned NOT NULL COMMENT '机房id，外键',
+  cabinet_name varchar(32) NOT NULL COMMENT '机柜名称',
+  cabinet_status tinyint(4) NOT NULL DEFAULT '100' COMMENT '机柜状态，100：已上架，101：已下架，102：已满，103：有空闲',
+  cabinet_desc varchar(128) NOT NULL COMMENT '机柜描述',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-  PRIMARY KEY (hostcabinet_id),
-  INDEX idx_hostroom_id (hostroom_id),
-  UNIQUE INDEX uq_idx_hostcabinetname (hostcabinet_name)
+  PRIMARY KEY (cabinet_id),
+  INDEX idx_idc_id (idc_id),
+  UNIQUE INDEX uq_idx_cabinet_name (cabinet_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '机柜信息表';
 
 
-CREATE TABLE ma_host (
-  host_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  hostcabinet_id bigint(20) unsigned NOT NULL COMMENT '机柜id，外键',
-  host_name varchar(32) NOT NULL COMMENT '机器名称',
-  host_status tinyint(4) NOT NULL DEFAULT '100' COMMENT '机器状态，100：已上架，101：已下架',
-  host_desc varchar(128) NOT NULL COMMENT '机柜描述',
+CREATE TABLE ma_manufactory (
+  manufactory_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  manufactory_name varchar(32) NOT NULL COMMENT '厂商名称',
+  manufactory_support_phone varchar(11) NOT NULL COMMENT '厂商支持电话',
+  manufactory_status tinyint(4) NOT NULL DEFAULT '100' COMMENT '厂商状态，100：正常服务，101：服务商倒闭，102：无法联系，103：暂停服务',
+  manufactory_desc varchar(128) NOT NULL COMMENT '厂商描述',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-  PRIMARY KEY (host_id),
-  INDEX idx_hostcabinet_id (hostcabinet_id),
-  UNIQUE INDEX uq_idx_host_name (host_name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '机器信息表';
+  PRIMARY KEY (manufactory_id),
+  UNIQUE INDEX uq_idx_manufactory_name (manufactory_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '厂商信息表';
 
-
-CREATE TABLE ma_host_network_card (
-  card_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  host_id bigint(20) unsigned NOT NULL COMMENT '机器id，外键',
-  card_name varchar(32) NOT NULL COMMENT '网卡名称：eth0等',
-  card_bind_ip varchar(15) NOT NULL COMMENT '网卡 ip',
-  card_bind_ip_type tinyint(4) NOT NULL DEFAULT '100' COMMENT 'IP 类型，100:内网IP，101:外网IP，102: VIP',
-  card_status tinyint(4) NOT NULL DEFAULT '100' COMMENT '网卡状态，100：已停用，101：使用中',
-  card_desc varchar(128) NOT NULL COMMENT '网卡描述',
+CREATE TABLE ma_software (
+  software_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  software_type tinyint NOT NULL COMMENT '软件类型，100：OS，101：办公\开发软件，102：业务软件',
+  license_num int NOT NULL COMMENT '授权数',
+  soft_version varchar(64) NOT NULL COMMENT '软件/系统版本，eg. CentOS release 6.5 (Final)',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-  PRIMARY KEY (card_id),
-  INDEX idx_host_id (host_id),
-  UNIQUE INDEX uq_idx_card_name (card_name)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '网卡信息表';
+  PRIMARY KEY (software_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '软件信息表';
+
+CREATE TABLE ma_contract (
+  contract_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  contract_sn varchar(128) NOT NULL COMMENT '合同号',
+  contract_name varchar(64) NOT NULL COMMENT '合同名称',
+  contract_price decimal(12,2) NOT NULL COMMENT '合同金额（单位：万元）',
+  contract_detail text NULL COMMENT '合同详细',
+  start_date date NOT NULL COMMENT '合同开始日期',
+  end_date date NOT NULL COMMENT '合同结束日期',
+  license_num int NULL COMMENT 'license数量, 0表示不适用',
+  contract_desc varchar(128) NOT NULL COMMENT '合同描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (contract_id),
+  UNIQUE INDEX uq_idx_contract_sn (contract_sn),
+  UNIQUE INDEX uq_idx_contract_name (contract_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '合同信息表';
+
+CREATE TABLE ma_asset (
+  asset_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  cabinet_id bigint(20) unsigned NOT NULL COMMENT '机柜id，外键',
+  contract_id bigint(20) unsigned NOT NULL COMMENT '合同id，外键',
+  business_id bigint(20) unsigned NOT NULL COMMENT '所属业务线id，外键',
+  asset_admin bigint(20) unsigned NOT NULL COMMENT '资产管理员，用户id，外键',
+  manufactory_id bigint(20) unsigned NOT NULL COMMENT '制造商id，外键',
+  asset_type varchar(32) NOT NULL COMMENT '资产类型：server-服务器, networkdevice-网络设备, storagedevice-存储设备, securitydevice-安全设备, idcdevice-机房设备, software-软件资产',
+  asset_name varchar(32) NOT NULL COMMENT '资产名称',
+  asset_sn varchar(128) NOT NULL DEFAULT '0000' COMMENT '资产SN号',
+  management_ip varchar(15) NOT NULL DEFAULT '0.0.0.0' COMMENT '管理IP',
+  asset_trade_date date NOT NULL DEFAULT '' COMMENT '购买时间',
+  asset_expire_date date NOT NULL DEFAULT '' COMMENT '过保时间',
+  asset_price decimal(12, 2) NOT NULL DEFAULT 0.0 COMMENT '资产单价(单位：元)',
+  asset_status tinyint(4) NOT NULL DEFAULT '100' COMMENT '资产状态，100：已上架，101：已下架',
+  asset_desc varchar(128) NOT NULL COMMENT '资产描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (asset_id),
+  INDEX idx_cabinet_id (cabinet_id),
+  INDEX idx_contract_id (contract_id),
+  UNIQUE INDEX uq_idx_host_name (host_name)，
+  UNIQUE INDEX uq_idx_asset_sn (asset_sn)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '资产信息表';
+
+CREATE TABLE ma_network_device (
+  asset_id bigint(20) unsigned NOT NULL COMMENT '主键id，跟asset表一对一',
+  software_id bigint(20) unsigned NOT NULL COMMENT '软件id，外键',
+  networkdevice_type tinyint NOT NULL COMMENT '设备类型，100：路由器，101：交换机，102：负载均衡，103：VPN设备',
+  vlan_ip varchar(15) NOT NULL COMMENT 'vlan IP',
+  intranet_ip varchar(15) NOT NULL COMMENT '内网IP',
+  model varchar(128) NOT NULL COMMENT '设备型号',
+  port_num int NOT NULL COMMENT '端口个数',
+  device_detail text COMMENT '设备详细配置',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (asset_id),
+  index idx_software_id (software_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '网络设备表';
+
+CREATE TABLE ma_security_device (
+  asset_id bigint(20) unsigned NOT NULL COMMENT '主键id，跟asset表一对一',
+  device_type tinyint NOT NULL COMMENT '设备类型，100：防火墙，101：入侵检测设备，102：互联网网关，103：运维审计系统',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (asset_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '安全设备表';
+
+
+
 
 
 ####### 产品相关表
