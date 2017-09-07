@@ -233,7 +233,6 @@ CREATE TABLE ma_asset (
   PRIMARY KEY (asset_id),
   INDEX idx_cabinet_id (cabinet_id),
   INDEX idx_contract_id (contract_id),
-  UNIQUE INDEX uq_idx_host_name (host_name)，
   UNIQUE INDEX uq_idx_asset_sn (asset_sn)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '资产信息表';
 
@@ -262,8 +261,158 @@ CREATE TABLE ma_security_device (
   PRIMARY KEY (asset_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '安全设备表';
 
+CREATE TABLE ma_server (
+  asset_id bigint(20) unsigned NOT NULL COMMENT '主键id，跟asset表一对一',
+  server_type tinyint NOT NULL DEFAULT 100 COMMENT '服务器类型，100：PC服务器，101：刀片机，102：小型机',
+  created_by varchar(10) NOT NULL DEFAULT 'auto' COMMENT '创建方式：auto|manual',
+  parent_asset_id bigint(20) unsigned NOT NULL DEFAULT 0 COMMENT 'for vitural server, 0 代表宿主机',
+  server_model varchar(128) NOT NULL COMMENT '服务器型号',
+  raid_type varchar(512) NOT NULL COMMENT 'raid 类型',
+  os_type varchar(64) NOT NULL COMMENT '操作系统类型',
+  os_distribution varchar(64) NOT NULL COMMENT '操作系统发型版本',
+  os_release varchar(64) NOT NULL COMMENT '操作系统版本',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (asset_id),
+  index idx_parent_asset_id (parent_asset_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '服务器信息表';
 
+CREATE TABLE ma_server_user (
+  server_user_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  asset_id bigint(20) unsigned NOT NULL COMMENT '外键，asset id',
+  server_user_name varchar(64) NOT NULL COMMENT '服务器用户名',
+  server_user_pwd varchar(64) NOT NULL COMMENT '服务器密码，md5加密',
+  server_user_group varchar(32) NOT NULL COMMENT '所属用户组：super|dbadmin|general|',
+  server_user_desc varchar(128) NOT NULL COMMENT '用户描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (server_user_id),
+  unique index uq_idx_asset_id_user_name(asset_id, server_user_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '服务器用户信息';
 
+CREATE TABLE ma_server_ip (
+  ip_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  asset_id bigint(20) unsigned NOT NULL COMMENT '外键，asset id',
+  ip_type varchar(15) NOT NULL COMMENT 'IP 类型：intranet|public|vip',
+  vip_status tinyint NOT NULL DEFAULT 1 COMMENT 'vip状态：1-正常服务，0-服务异常',
+  ip_desc varchar(128) NOT NULL COMMENT '描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (ip_id),
+  index idx_asset_id (asset_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '服务器ip信息';
+
+CREATE TABLE ma_ram (
+  asset_id bigint(20) unsigned NOT NULL COMMENT '主键，asset id',
+  ram_sn varchar(128) NOT NULL COMMENT 'SN号',
+  ram_model varchar(128) NOT NULL COMMENT '内存型号',
+  ram_slot varchar(64) NOT NULL COMMENT '插槽',
+  ram_capacity int NOT NULL COMMENT '内存大小(单位：MB)',
+  ram_desc varchar(128) NOT NULL COMMENT '描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (asset_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '服务器ram组件表';
+
+CREATE TABLE ma_cpu (
+  asset_id bigint(20) unsigned NOT NULL COMMENT '主键，asset id',
+  cpu_model varchar(128) NOT NULL COMMENT 'CPU型号',
+  cpu_num int NOT NULL COMMENT '物理cpu个数',
+  cpu_core_num int NOT NULL COMMENT 'cpu核数',
+  cpu_desc varchar(128) NOT NULL COMMENT '描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (asset_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '服务器cpu组件表';
+
+CREATE TABLE ma_disk (
+  asset_id bigint(20) unsigned NOT NULL COMMENT '主键，asset id',
+  disk_sn varchar(128) NOT NULL COMMENT 'SN号',
+  disk_slot varchar(64) NOT NULL COMMENT '插槽位',
+  disk_model varchar(128) NOT NULL COMMENT '磁盘型号',
+  disk_capacity decimal(12,2) NOT NULL COMMENT '磁盘容量(GB)',
+  iface_type varchar(32) NOT NULL COMMENT '接口类型：SATA|SAS|SCSI|SSD',
+  disk_desc varchar(128) NOT NULL COMMENT '描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (asset_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '服务器DISK组件表';
+
+CREATE TABLE ma_nic (
+  asset_id bigint(20) unsigned NOT NULL COMMENT '主键，asset id',
+  nic_name varchar(32) NOT NULL COMMENT '网卡名',
+  nic_sn varchar(128) NOT NULL COMMENT 'SN号',
+  nic_mode varchar(128) NOT NULL COMMENT '网卡型号',
+  nic_macaddress varchar(17) NOT NULL COMMENT 'MAC地址',
+  nic_ipaddress varchar(15)  NOT NULL COMMENT 'IP地址',
+  nic_netmask varchar(15)  NOT NULL COMMENT '子网掩码',
+  nic_bonding varchar(64)  NOT NULL COMMENT '',
+  nic_desc varchar(128) NOT NULL COMMENT '描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (asset_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '服务器DISK组件表';
+
+CREATE TABLE ma_raid_adaptor (
+  asset_id bigint(20) unsigned NOT NULL COMMENT '主键，asset id',
+  raid_sn varchar(128) NOT NULL COMMENT 'SN号',
+  raid_slot varchar(64) NOT NULL COMMENT '插口',
+  raid_model varchar(64) NOT NULL COMMENT '型号',
+  raid_desc varchar(128) NOT NULL COMMENT '描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (asset_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '服务器RAID组件表';
+
+CREATE TABLE ma_asset_approval (
+  approval_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键，asset id',
+  manufactory_id bigint(20) unsigned NOT NULL COMMENT '制造商id，外键',
+  asset_sn varchar(128) NOT NULL DEFAULT '0000' COMMENT '资产SN号',
+  asset_type varchar(32) NOT NULL COMMENT '资产类型：server-服务器, networkdevice-网络设备, storagedevice-存储设备, securitydevice-安全设备, idcdevice-机房设备, software-软件资产',
+  model varchar(128) NOT NULL COMMENT '资产型号',
+  ram_size int NOT NULL COMMENT '内存大小，MB',
+  cpu_model varchar(128) NOT NULL COMMENT 'CPU型号',
+  cpu_num int NOT NULL COMMENT '物理cpu个数',
+  cpu_core_num int NOT NULL COMMENT 'cpu核数',
+  os_type varchar(64) NOT NULL COMMENT '操作系统类型',
+  os_distribution varchar(64) NOT NULL COMMENT '操作系统发型版本',
+  os_release varchar(64) NOT NULL COMMENT '操作系统版本',
+  asset_data text NULL COMMENT'资产数据',
+  report_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '汇报日期',
+  approved_stauts tinyint NOT NULL DEFAULT 0 COMMENT '审批状态：1-已批准，0-未批准',
+  approved_by bigint(20) unsigned NOT NULL COMMENT '审批人，用户id，外键',
+  approved_date datetime NULL COMMENT '批准日期',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (approval_id),
+  INDEX idx_manufactory_id (manufactory_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '新资产审核表';
+
+CREATE TABLE ma_eventlog (
+  event_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键，asset id',
+  asset_id bigint(20) unsigned NOT NULL COMMENT '外键，asset id',
+  event_name varchar(128) NOT NULL COMMENT '事件名称',
+  event_type tinyint NOT NULL DEFAULT 107 COMMENT '时间类型：101-硬件变更，102-新增配件，103-设备下线，104-设备上线，105-定期维护，106-业务上线\更新\变更，107-其它',
+  event_component varchar(256) NOT NULL COMMENT '事件子项',
+  event_detail text NULL COMMENT '事件详情',
+  event_datetime datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT'事件发生时间',
+  user_id bigint(20) unsigned NOT NULL COMMENT '事件源，外键，用户 id',
+  event_desc varchar(128) NOT NULL COMMENT '描述',
+  is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
+  created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
+  updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
+  PRIMARY KEY (event_id),
+  INDEX idx_asset_id (asset_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '事件日志表';
 
 
 ####### 产品相关表
@@ -291,7 +440,7 @@ CREATE TABLE prd_product (
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
   PRIMARY KEY (product_id),
   UNIQUE INDEX uq_idx_prdname (product_name),
-  INDEX idx_business_id (business_id),
+  INDEX idx_business_id (business_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '产品线表';
 
 CREATE TABLE prd_service (
