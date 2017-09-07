@@ -1,6 +1,8 @@
 
+
 #### for mysql 5.6.28
 
+create database dbm_db;
 use dbm_db;
 
 ####### 用户相关表
@@ -222,8 +224,8 @@ CREATE TABLE ma_asset (
   asset_name varchar(32) NOT NULL COMMENT '资产名称',
   asset_sn varchar(128) NOT NULL DEFAULT '0000' COMMENT '资产SN号',
   management_ip varchar(15) NOT NULL DEFAULT '0.0.0.0' COMMENT '管理IP',
-  asset_trade_date date NOT NULL DEFAULT '' COMMENT '购买时间',
-  asset_expire_date date NOT NULL DEFAULT '' COMMENT '过保时间',
+  asset_trade_date date NOT NULL COMMENT '购买时间',
+  asset_expire_date date NOT NULL COMMENT '过保时间',
   asset_price decimal(12, 2) NOT NULL DEFAULT 0.0 COMMENT '资产单价(单位：元)',
   asset_status tinyint(4) NOT NULL DEFAULT '100' COMMENT '资产状态，100：已上架，101：已下架',
   asset_desc varchar(128) NOT NULL COMMENT '资产描述',
@@ -459,7 +461,7 @@ CREATE TABLE prd_service (
   PRIMARY KEY (service_id),
   INDEX idx_prdid (product_id),
   INDEX idx_pdm (service_pdm),
-  INDEX idx_pjm (service_pdm),
+  INDEX idx_pjm (service_pjm),
   INDEX idx_devledear (service_dev_ledear),
   INDEX idx_qaledear (service_qa_ledear),
   UNIQUE INDEX uq_idx_service_name (service_name)
