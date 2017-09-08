@@ -42,7 +42,10 @@ INSTALLED_APPS = [
     'reversion',
     'asset',
     'account',
-    'workorder',
+    'workflow',
+    'business',
+    'dbresource',
+    'monitor',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -80,13 +83,23 @@ WSGI_APPLICATION = 'DBM.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dbm_db', #确保此数据库已存在
+        'HOST':'10.3.2.86',
+        'PORT':'3306',
+        'USER':'system',
+        'PASSWORD':'111111',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
