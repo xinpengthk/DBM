@@ -9,8 +9,6 @@ Created on 2017-09-08
 '''
 
 from django.db import models
-# from account.entity.SysDept import SysDept
-# from account.entity.SysTitle import SysTitle
 
 BOOLEAN_CHOICES = (
     (0, '否'),
@@ -55,24 +53,15 @@ class SysUser(models.Model):
         help_text='用户领导id，0为管理员用户，自外键',
     )
     
-    userRealName = models.CharField(db_column='user_realname',
+    userName = models.CharField(db_column='user_name',
         max_length=32,
         unique=True,
         null=False,
         blank=False,
-        verbose_name='用户真实姓名',
-        help_text='请输入用户真实姓名',
+        verbose_name='用户姓名',
+        help_text='请输入用户姓名',
     )
     
-    userLoginName = models.CharField(db_column='user_login_name',
-        max_length=32,
-        unique=True,
-        null=False,
-        blank=False,
-        verbose_name='用户登录名',
-        help_text='请输入用户登录名',
-    )
-
     userPwd = models.CharField(db_column='user_pwd',
         max_length=64,
         null=False,
@@ -142,17 +131,16 @@ class SysUser(models.Model):
         help_text='记录最后更新时间',
     )
 
-    REQUIRED_FIELDS = ['userRealName']
+    REQUIRED_FIELDS = ['userName']
 
     def __str__(self):              # __unicode__ on Python 2
-        return self.userRealName
+        return self.userName
     
-    def get_user_realname(self):
-        return self.userRealName
-
-    def get_user_loginname(self):
-        # The user is identified by their email address
-        return self.userLoginName
+    def get_user_name(self):
+        return self.userName
+    
+#     def set_password(self, pwd):
+#         self.userPwd = pwd
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
