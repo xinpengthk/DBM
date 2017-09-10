@@ -50,7 +50,7 @@ CREATE TABLE sys_user (
   INDEX idx_dept_id (dept_id),
   INDEX idx_title_id (title_id),
   INDEX idx_user_mgrid (user_mgrid),
-  UNIQUE INDEX uq_idx_loginname (user_login_name),
+  UNIQUE INDEX uq_idx_user_name (user_name),
   UNIQUE INDEX uq_idx_email (user_email),
   UNIQUE INDEX uq_idx_phone (user_phone)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '系统用户表, admin用户拥有超级权限';
