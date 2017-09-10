@@ -1,7 +1,10 @@
 from django.contrib import admin
-from metam.entity import Product, MasterConfig
+from account.entity.SysUser import SysUser
+from account.entity.SysDept import SysDept
+from account.entity.SysTitle import SysTitle
 
-# Register your models here.
-admin.site.register(Product.Product)
 
-admin.site.register(MasterConfig.MasterConfig)
+admin.site.register(SysDept)
+admin.site.register(SysTitle)
+admin.site.register(SysUser)
+
