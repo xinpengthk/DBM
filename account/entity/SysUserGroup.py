@@ -23,13 +23,13 @@ IS_DEL_CHOICES = (
 
 class SysUserGroup(models.Model):
     groupId = models.BigIntegerField(db_column='group_id', 
-        verbose_name='主键ID 1', 
-        help_text='主键ID 1',
+        verbose_name='用户组 ID', 
+        help_text='用户组 ID',
     )
     
     userId = models.BigIntegerField(db_column='user_id', 
-        verbose_name='主键ID 2', 
-        help_text='主键ID 2',
+        verbose_name='用户 ID', 
+        help_text='用户 ID',
     )
 
     isDel = models.SmallIntegerField(db_column='is_del',

@@ -93,6 +93,7 @@ class SysUser(models.Model):
          null=False,
          blank=False,
          unique=True,
+         default='xxx@dycd.com',
          verbose_name='用户邮箱',
          help_text='请输入邮箱！',
     )
@@ -102,6 +103,7 @@ class SysUser(models.Model):
          null=False,
          blank=False,
          unique=True,
+         default='11000000000',
          verbose_name='用户手机号',
          help_text='请输入手机号！',
     )

@@ -67,7 +67,7 @@ class SysMenu(models.Model):
 
     menuPriv = models.CharField(db_column='menu_priv',
         max_length=32,
-        choice=MENU_PRIV_CHOICES,
+        choices=MENU_PRIV_CHOICES,
         null=False,
         blank=False,
         verbose_name='菜单权限，CRUD...',

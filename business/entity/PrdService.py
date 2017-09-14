@@ -5,7 +5,7 @@
 Created on 2017-09-08
 
 @Author: XinPeng
-@Description: group model
+@Description: product service model
 '''
 
 
@@ -26,8 +26,8 @@ IS_DEL_CHOICES = (
     (1, '已删除'),
 )
 
-class SysGroup(models.Model):
-    groupId = models.BigAutoField(db_column='group_id', 
+class PrdService(models.Model):
+    serviceId = models.BigAutoField(db_column='service_id', 
         primary_key=True, 
         verbose_name='主键ID', 
         help_text='主键自增ID',
@@ -109,7 +109,7 @@ class SysGroup(models.Model):
         return True
 
     class Meta:    
-        db_table = 'sys_group' 
+        db_table = 'prd_service' 
         verbose_name = u'员工分组表'
         verbose_name_plural = u"员工分组表"
         

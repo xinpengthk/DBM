@@ -5,7 +5,7 @@
 Created on 2017-09-08
 
 @Author: XinPeng
-@Description: group model
+@Description: menu model
 '''
 
 
@@ -16,49 +16,23 @@ BOOLEAN_CHOICES = (
     (1, '是'),
 )
 
-GROUP_STATUS_CHOICES = (
-    (0, '不可用'),
-    (1, '可用'),
-)
-
 IS_DEL_CHOICES = (
     (0, '未删除'),
     (1, '已删除'),
 )
 
-class SysGroup(models.Model):
-    groupId = models.BigAutoField(db_column='group_id', 
-        primary_key=True, 
-        verbose_name='主键ID', 
-        help_text='主键自增ID',
+class SysGroupRole(models.Model):
+
+    groupId = models.ForeignKey('SysGroup', 
+        verbose_name='用户组 ID', 
+        help_text='用户组 ID',
     )
     
-    groupName = models.CharField(db_column='group_name',
-        max_length=32,
-        unique=True,
-        null=False,
-        blank=False,
-        verbose_name='项目组名称（项目名）',
-        help_text='请输入项目组名称!',
-    )
-
-    groupStatus = models.SmallIntegerField(db_column='group_status',
-        null=False,
-        blank=False,
-        choices=GROUP_STATUS_CHOICES,
-        default=1,
-        verbose_name='项目组状态',
-        help_text='项目组状态，0：不可用，1：可用',
+    roleId = models.ForeignKey('SysRole', 
+        verbose_name='角色 ID', 
+        help_text='角色 ID',
     )
     
-    groupDesc = models.EmailField(db_column='group_desc',
-         max_length=128,
-         null=False,
-         blank=False,
-         verbose_name='项目组描述',
-         help_text='项目组描述！',
-    )
-
     isDel = models.SmallIntegerField(db_column='is_del',
         null=False,
         blank=False,
@@ -84,14 +58,10 @@ class SysGroup(models.Model):
         help_text='记录最后更新时间',
     )
 
-    REQUIRED_FIELDS = ['groupName', 'groupStatus', 'groupDesc', ]
+    REQUIRED_FIELDS = ['roleId', 'groupID', 'isDel', ]
 
     def __str__(self):              # __unicode__ on Python 2
-        return self.groupName
-
-    def get_group_name(self):
-        # The user is identified by their email address
-        return self.groupName
+        return '<GroupID:%s, RoleID:%s>' %(self.groupId, self.roleId)
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -109,7 +79,6 @@ class SysGroup(models.Model):
         return True
 
     class Meta:    
-        db_table = 'sys_group' 
-        verbose_name = u'员工分组表'
-        verbose_name_plural = u"员工分组表"
-        
+        db_table = 'sys_group_role' 
+        verbose_name = u'用户角色关联表'
+        verbose_name_plural = u"用户角色关联表"

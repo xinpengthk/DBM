@@ -21,16 +21,16 @@ IS_DEL_CHOICES = (
     (1, '已删除'),
 )
 
-class SysMenu(models.Model):
+class SysRoleMenu(models.Model):
 
     roleId = models.BigIntegerField(db_column='role_id', 
-        verbose_name='主键ID 1', 
-        help_text='主键ID 1',
+        verbose_name='角色 ID', 
+        help_text='角色 ID',
     )
     
     menuId = models.BigIntegerField(db_column='menu_id', 
-        verbose_name='主键ID 2', 
-        help_text='主键ID 2',
+        verbose_name='菜单 ID', 
+        help_text='菜单 ID',
     )
     
     isDel = models.SmallIntegerField(db_column='is_del',
