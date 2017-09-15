@@ -10,7 +10,10 @@ Created on 2017-09-08
 
 
 from django.db import models
+
+from account.entity.SysGroup import SysGroup
 from business.entity.PrdService import PrdService
+
 
 BOOLEAN_CHOICES = (
     (0, '否'),
@@ -24,12 +27,16 @@ IS_DEL_CHOICES = (
 
 class SysGroupService(models.Model):
 
-    groupId = models.ForeignKey('SysGroup', 
+    groupId = models.ForeignKey(SysGroup, 
+        on_delete=models.CASCADE, 
+        db_index=False,
         verbose_name='用户组 ID', 
         help_text='用户组 ID',
     )
     
     serviceId = models.ForeignKey(PrdService, 
+        on_delete=models.CASCADE, 
+        db_index=False,
         verbose_name='服务 ID', 
         help_text='服务 ID',
     )

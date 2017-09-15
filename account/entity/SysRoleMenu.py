@@ -11,6 +11,10 @@ Created on 2017-09-08
 
 from django.db import models
 
+from account.entity.SysMenu import SysMenu
+from account.entity.SysRole import SysRole
+
+
 BOOLEAN_CHOICES = (
     (0, '否'),
     (1, '是'),
@@ -23,14 +27,20 @@ IS_DEL_CHOICES = (
 
 class SysRoleMenu(models.Model):
 
-    roleId = models.BigIntegerField(db_column='role_id', 
-        verbose_name='角色 ID', 
-        help_text='角色 ID',
+    roleId = models.ForeignKey(SysRole, 
+        on_delete=models.CASCADE,
+        db_column='role_id',
+        db_index=False,
+        verbose_name='角色id，外键',
+        help_text='角色id',
     )
     
-    menuId = models.BigIntegerField(db_column='menu_id', 
-        verbose_name='菜单 ID', 
-        help_text='菜单 ID',
+    menuId = models.ForeignKey(SysMenu,
+        on_delete=models.CASCADE,
+        db_column='menu_id',
+        db_index=False,
+        verbose_name='菜单id，外键',
+        help_text='菜单id',
     )
     
     isDel = models.SmallIntegerField(db_column='is_del',

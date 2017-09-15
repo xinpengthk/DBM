@@ -11,6 +11,10 @@ Created on 2017-09-08
 
 from django.db import models
 
+from account.entity.SysGroup import SysGroup
+from account.entity.SysUser import SysUser
+
+
 BOOLEAN_CHOICES = (
     (0, '否'),
     (1, '是'),
@@ -22,12 +26,18 @@ IS_DEL_CHOICES = (
 )
 
 class SysUserGroup(models.Model):
-    groupId = models.BigIntegerField(db_column='group_id', 
+    groupId = models.ForeignKey(SysGroup, 
+        on_delete=models.CASCADE,
+        db_column='group_id',
+        db_index=False,
         verbose_name='用户组 ID', 
         help_text='用户组 ID',
     )
     
-    userId = models.BigIntegerField(db_column='user_id', 
+    userId = models.ForeignKey(SysUser,
+        on_delete=models.CASCADE,
+        db_column='user_id', 
+        db_index=False,
         verbose_name='用户 ID', 
         help_text='用户 ID',
     )

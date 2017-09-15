@@ -35,6 +35,7 @@ class SysUser(models.Model):
     deptId = models.ForeignKey('SysDept', 
         on_delete=models.CASCADE,
         db_column='dept_id',
+        db_index=False,
         verbose_name='部门编号，外键',
         help_text='请选择部门',
     )
@@ -42,13 +43,15 @@ class SysUser(models.Model):
     titleId = models.ForeignKey('SysTitle',
         on_delete=models.CASCADE,
         db_column='title_id',
+        db_index=False,
         verbose_name='职位编号，外键',
         help_text='请输入职位',
     )
     
-    userMgrid = models.ForeignKey('SysUser',
-#         on_delete=models.SET_NULL,
+    userMgrid = models.ForeignKey('self',
+        on_delete=models.CASCADE,
         db_column='user_mgrid',
+        db_index=False,
         verbose_name='用户领导id',
         help_text='用户领导id，0为管理员用户，自外键',
     )

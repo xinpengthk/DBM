@@ -11,14 +11,19 @@ Created on 2017-09-08
 
 from django.db import models
 
+from business.entity.PrdProduct import PrdProduct
+from account.entity.SysUser import SysUser
+
+
 BOOLEAN_CHOICES = (
     (0, '否'),
     (1, '是'),
 )
 
-GROUP_STATUS_CHOICES = (
-    (0, '不可用'),
-    (1, '可用'),
+SERVICE_STATUS_CHOICES = (
+    (0, '未上线'),
+    (1, '已上线'),
+    (2, '已下线'),  
 )
 
 IS_DEL_CHOICES = (
@@ -32,31 +37,86 @@ class PrdService(models.Model):
         verbose_name='主键ID', 
         help_text='主键自增ID',
     )
+
+    productId = models.ForeignKey(
+        PrdProduct,
+        on_delete=models.DO_NOTHING,
+        db_column='product_id',
+        related_name='product_id',
+        db_index=False,
+        verbose_name='产品线编号，外键',
+        help_text='请选择产品线',
+        
+    )
     
-    groupName = models.CharField(db_column='group_name',
+    serviceName = models.CharField(db_column='service_name',
         max_length=32,
-        unique=True,
         null=False,
         blank=False,
-        verbose_name='项目组名称（项目名）',
-        help_text='请输入项目组名称!',
+        db_index=True,
+        verbose_name='服务名称',
+        help_text='请输入服务名称！',
+    )
+    
+    servicePdm = models.ForeignKey(
+        SysUser,
+        on_delete=models.DO_NOTHING,
+        db_column='service_pdm',
+        related_name='servicePdm',
+        db_index=False,
+        verbose_name='该服务项目经理id，外键, sys_user',
+        help_text='请选择项目经理！',
+        
     )
 
-    groupStatus = models.SmallIntegerField(db_column='group_status',
-        null=False,
-        blank=False,
-        choices=GROUP_STATUS_CHOICES,
-        default=1,
-        verbose_name='项目组状态',
-        help_text='项目组状态，0：不可用，1：可用',
+    servicePjm = models.ForeignKey(
+        SysUser,
+        on_delete=models.DO_NOTHING,
+        db_column='service_pjm',
+        related_name='servicePjm',
+        db_index=False,
+        verbose_name='该服务产品经理id，外键, sys_user',
+        help_text='请选择产品经理！',
+        
     )
     
-    groupDesc = models.EmailField(db_column='group_desc',
+    serviceDevLedear = models.ForeignKey(
+        SysUser,
+        on_delete=models.DO_NOTHING,
+        db_column='service_dev_ledear',
+        related_name='serviceDevLedear',
+        db_index=False,
+        verbose_name='该服务开发ledear，外键, sys_user',
+        help_text='请选择该服务开发ledear！',
+        
+    )
+    
+    serviceQaLedear = models.ForeignKey(
+        SysUser,
+        on_delete=models.DO_NOTHING,
+        db_column='service_qa_ledear',
+        related_name='serviceQaLedear',
+        db_index=False,
+        verbose_name='该服务测试ledear，外键, sys_user',
+        help_text='请选择该服务测试ledear！',
+        
+    )
+    
+    serviceStatus = models.SmallIntegerField(db_column='service_status',
+        null=False,
+        blank=False,
+        choices=SERVICE_STATUS_CHOICES,
+        default=1,
+        verbose_name='服务状态，0：未上线，1：已上线，2：已下线',
+        help_text='服务状态，0：未上线，1：已上线，2：已下线',
+    )
+    
+    serviceDesc = models.EmailField(db_column='service_desc',
          max_length=128,
          null=False,
          blank=False,
-         verbose_name='项目组描述',
-         help_text='项目组描述！',
+         verbose_name='服务描述',
+         help_text='服务描述！',
     )
 
     isDel = models.SmallIntegerField(db_column='is_del',
@@ -84,14 +144,14 @@ class PrdService(models.Model):
         help_text='记录最后更新时间',
     )
 
-    REQUIRED_FIELDS = ['groupName', 'groupStatus', 'groupDesc', ]
+    REQUIRED_FIELDS = ['productId', 'serviceName', 'servicePdm', 'servicePjm', 'serviceDevLedear', 'serviceQaLedear', 'serviceStatus', 'serviceDesc']
 
     def __str__(self):              # __unicode__ on Python 2
-        return self.groupName
+        return '<Product:%s-Service:%s>' %(self.productId, self.serviceName)
 
-    def get_group_name(self):
+    def get_service_name(self):
         # The user is identified by their email address
-        return self.groupName
+        return self.serviceName
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -110,6 +170,6 @@ class PrdService(models.Model):
 
     class Meta:    
         db_table = 'prd_service' 
-        verbose_name = u'员工分组表'
-        verbose_name_plural = u"员工分组表"
+        verbose_name = u'产品线中服务表'
+        verbose_name_plural = u"产品线中服务表"
         

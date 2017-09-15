@@ -5,19 +5,21 @@
 Created on 2017-09-08
 
 @Author: XinPeng
-@Description: menu model
+@Description: business model
 '''
 
 
 from django.db import models
 
-from account.entity.SysGroup import SysGroup
-from account.entity.SysRole import SysRole
-
-
 BOOLEAN_CHOICES = (
     (0, '否'),
     (1, '是'),
+)
+
+BUSINESS_STATUS_CHOICES = (
+    (0, '未上线'),
+    (1, '已上线'),
+    (2, '已下线'),    
 )
 
 IS_DEL_CHOICES = (
@@ -25,22 +27,39 @@ IS_DEL_CHOICES = (
     (1, '已删除'),
 )
 
-class SysGroupRole(models.Model):
+class PrdBusiness(models.Model):
+    businessId = models.BigAutoField(db_column='business_id', 
+        primary_key=True, 
+        verbose_name='主键ID', 
+        help_text='主键自增ID',
+    )
+    
+    businessName = models.CharField(db_column='business_name',
+        max_length=32,
+        unique=True,
+        null=False,
+        blank=False,
+        verbose_name='业务线名称',
+        help_text='请输入业务线名称!',
+    )
 
-    groupId = models.ForeignKey(SysGroup,
-        on_delete=models.CASCADE, 
-        db_index=False,
-        verbose_name='用户组 ID', 
-        help_text='用户组 ID',
+    businessStatus = models.SmallIntegerField(db_column='business_status',
+        null=False,
+        blank=False,
+        choices=BUSINESS_STATUS_CHOICES,
+        default=1,
+        verbose_name='业务线状态',
+        help_text='业务线状态，0：未上线，1：已上线，2：已下线',
     )
     
-    roleId = models.ForeignKey(SysRole, 
-        on_delete=models.CASCADE, 
-        db_index=False,
-        verbose_name='角色 ID', 
-        help_text='角色 ID',
+    businessDesc = models.EmailField(db_column='business_desc',
+         max_length=128,
+         null=False,
+         blank=False,
+         verbose_name='业务线描述',
+         help_text='业务线描述！',
     )
-    
+
     isDel = models.SmallIntegerField(db_column='is_del',
         null=False,
         blank=False,
@@ -66,10 +85,14 @@ class SysGroupRole(models.Model):
         help_text='记录最后更新时间',
     )
 
-    REQUIRED_FIELDS = ['roleId', 'groupID', 'isDel', ]
+    REQUIRED_FIELDS = ['businessName', 'businessStatus', 'businessDesc', ]
 
     def __str__(self):              # __unicode__ on Python 2
-        return '<GroupID:%s, RoleID:%s>' %(self.groupId, self.roleId)
+        return self.businessName
+
+    def get_business_name(self):
+        # The user is identified by their email address
+        return self.businessName
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -87,6 +110,7 @@ class SysGroupRole(models.Model):
         return True
 
     class Meta:    
-        db_table = 'sys_group_role' 
-        verbose_name = u'用户角色关联表'
-        verbose_name_plural = u"用户角色关联表"
+        db_table = 'prd_business' 
+        verbose_name = u'业务线表'
+        verbose_name_plural = u"业务线表"
+        

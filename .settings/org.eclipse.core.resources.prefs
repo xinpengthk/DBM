@@ -1,8 +1,14 @@
 eclipse.preferences.version=1
 encoding//account/entity/SysDept.py=utf-8
+encoding//account/entity/SysGroupRole.py=utf-8
+encoding//account/entity/SysGroupService.py=utf-8
 encoding//account/entity/SysMenu.py=utf-8
 encoding//account/entity/SysRole.py=utf-8
 encoding//account/entity/SysRoleMenu.py=utf-8
+encoding//account/entity/SysTitle.py=utf-8
 encoding//account/entity/SysUser.py=utf-8
 encoding//account/entity/SysUserGroup.py=utf-8
+encoding//business/entity/PrdBusiness.py=utf-8
+encoding//business/entity/PrdProduct.py=utf-8
+encoding//business/entity/PrdService.py=utf-8
 encoding/<project>=UTF-8
