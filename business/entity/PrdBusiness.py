@@ -52,7 +52,7 @@ class PrdBusiness(models.Model):
         help_text='业务线状态，0：未上线，1：已上线，2：已下线',
     )
     
-    businessDesc = models.EmailField(db_column='business_desc',
+    businessDesc = models.CharField(db_column='business_desc',
          max_length=128,
          null=False,
          blank=False,

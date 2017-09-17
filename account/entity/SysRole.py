@@ -5,7 +5,7 @@
 Created on 2017-09-08
 
 @Author: XinPeng
-@Description: menu model
+@Description: role model
 '''
 
 
@@ -107,5 +107,5 @@ class SysRole(models.Model):
 
     class Meta:    
         db_table = 'sys_role' 
-        verbose_name = u'系统菜单表'
-        verbose_name_plural = u"系统菜单表"
+        verbose_name = u'系统角色表'
+        verbose_name_plural = u"系统角色表"

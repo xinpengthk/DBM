@@ -26,7 +26,12 @@ IS_DEL_CHOICES = (
 )
 
 class SysGroupService(models.Model):
-
+    groupServiceId = models.BigAutoField(db_column='group_service_id', 
+        primary_key=True, 
+        verbose_name='主键ID', 
+        help_text='主键自增ID',
+    )
+    
     groupId = models.ForeignKey(SysGroup, 
         on_delete=models.CASCADE, 
         db_index=False,

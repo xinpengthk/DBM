@@ -63,7 +63,7 @@ class PrdProduct(models.Model):
         help_text='产品线状态，0：未上线，1：已上线，2：已下线',
     )
     
-    productDesc = models.EmailField(db_column='product_desc',
+    productDesc = models.CharField(db_column='product_desc',
          max_length=128,
          null=False,
          blank=False,

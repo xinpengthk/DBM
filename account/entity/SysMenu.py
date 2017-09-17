@@ -57,7 +57,7 @@ class SysMenu(models.Model):
         help_text='请输入菜单名称',
     )
 
-    menuUrl = models.CharField(db_column='menu_url',
+    menuUrl = models.URLField(db_column='menu_url',
         max_length=256,
         null=False,
         blank=False,
@@ -116,7 +116,7 @@ class SysMenu(models.Model):
         help_text='记录最后更新时间',
     )
 
-    REQUIRED_FIELDS = ['deptName', 'deptLoc', 'deptStatus', 'deptDesc', ]
+    REQUIRED_FIELDS = ['menuName', 'menuParentId', 'menuUrl', 'menuPriv', 'menuSort', 'menuStatus', ]
 
     def __str__(self):              # __unicode__ on Python 2
         return '<menuName:%s, menuUrl:%s, menuPriv:%s>' %(self.menuName, self.menuUrl, self.menuPriv)

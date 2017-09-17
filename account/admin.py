@@ -14,10 +14,23 @@ from account.entity.SysTitle import SysTitle
 from account.entity.SysUser import SysUser
 from account.entity.SysUserGroup import SysUserGroup
 
+class SysUserForm(forms.ModelForm):
+    class Meta:
+        model = SysUser
+        fields = '__all__'
+    widgets = {
+            'userPwd' : forms.PasswordInput(),
+        }
+
+class SysUserAdmin(admin.ModelAdmin):
+    form = SysUserForm
+    list_display = ('userName', 'userEmail', 'userPhone', 'userStatus')
+    list_per_page=30
+    
 
 admin.site.register(SysDept)
 admin.site.register(SysTitle)
-admin.site.register(SysUser)
+admin.site.register(SysUser, SysUserAdmin)
 admin.site.register(SysGroup)
 admin.site.register(SysGroupRole)
 admin.site.register(SysGroupService)

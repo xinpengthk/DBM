@@ -36,25 +36,26 @@ class SysUser(models.Model):
         on_delete=models.CASCADE,
         db_column='dept_id',
         db_index=False,
-        verbose_name='部门编号，外键',
-        help_text='请选择部门',
+        verbose_name='所属部门',
+        help_text='请选择部门！',
     )
     
     titleId = models.ForeignKey('SysTitle',
         on_delete=models.CASCADE,
         db_column='title_id',
         db_index=False,
-        verbose_name='职位编号，外键',
-        help_text='请输入职位',
+        verbose_name='所属岗位',
+        help_text='请选择职位！',
     )
     
-    userMgrid = models.ForeignKey('self',
-        on_delete=models.CASCADE,
-        db_column='user_mgrid',
-        db_index=False,
-        verbose_name='用户领导id',
-        help_text='用户领导id，0为管理员用户，自外键',
-    )
+#     userMgrid = models.ForeignKey('self',
+#         on_delete=models.CASCADE,
+#         db_column='user_mgrid',
+#         db_index=False,
+#         default=0,
+#         verbose_name='上级领导',
+#         help_text='请选择上级领导！',
+#     )
     
     userName = models.CharField(db_column='user_name',
         max_length=32,

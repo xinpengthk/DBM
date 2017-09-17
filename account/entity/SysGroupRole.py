@@ -5,7 +5,7 @@
 Created on 2017-09-08
 
 @Author: XinPeng
-@Description: menu model
+@Description: group role model
 '''
 
 
@@ -26,7 +26,12 @@ IS_DEL_CHOICES = (
 )
 
 class SysGroupRole(models.Model):
-
+    groupRoleId = models.BigAutoField(db_column='group_role_id', 
+        primary_key=True, 
+        verbose_name='主键ID', 
+        help_text='主键自增ID',
+    )
+    
     groupId = models.ForeignKey(SysGroup,
         on_delete=models.CASCADE, 
         db_index=False,

@@ -5,7 +5,7 @@
 Created on 2017-09-08
 
 @Author: XinPeng
-@Description: department model
+@Description: title model
 '''
 
 
@@ -62,12 +62,12 @@ class SysTitle(models.Model):
         null=False,
         blank=False,
         choices=TITLE_STATUS_CHOICES,
-        default=0,
+        default=1,
         verbose_name='岗位激活状态',
         help_text='岗位激活状态，0：未激活，1：激活',
     )
     
-    titleDesc = models.EmailField(db_column='title_desc',
+    titleDesc = models.CharField(db_column='title_desc',
          max_length=128,
          null=False,
          blank=False,

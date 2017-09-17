@@ -111,7 +111,7 @@ class PrdService(models.Model):
         help_text='服务状态，0：未上线，1：已上线，2：已下线',
     )
     
-    serviceDesc = models.EmailField(db_column='service_desc',
+    serviceDesc = models.CharField(db_column='service_desc',
          max_length=128,
          null=False,
          blank=False,

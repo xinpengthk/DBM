@@ -5,7 +5,7 @@
 Created on 2017-09-08
 
 @Author: XinPeng
-@Description: group model
+@Description: user group model
 '''
 
 
@@ -26,20 +26,26 @@ IS_DEL_CHOICES = (
 )
 
 class SysUserGroup(models.Model):
+    userGroupId = models.BigAutoField(db_column='user_group_id', 
+        primary_key=True, 
+        verbose_name='主键ID', 
+        help_text='主键自增ID',
+    )
+    
     groupId = models.ForeignKey(SysGroup, 
         on_delete=models.CASCADE,
         db_column='group_id',
         db_index=False,
-        verbose_name='用户组 ID', 
-        help_text='用户组 ID',
+        verbose_name='用户组 ', 
+        help_text='请选择用户组！ ',
     )
     
     userId = models.ForeignKey(SysUser,
         on_delete=models.CASCADE,
         db_column='user_id', 
         db_index=False,
-        verbose_name='用户 ID', 
-        help_text='用户 ID',
+        verbose_name='用户', 
+        help_text='请选择用户 ！',
     )
 
     isDel = models.SmallIntegerField(db_column='is_del',

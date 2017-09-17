@@ -46,6 +46,7 @@ class SysDept(models.Model):
         max_length=32,
         null=False,
         blank=False,
+        default='北京',
         verbose_name='部门工作地点',
         help_text='请输入部门工作地点',
     )
@@ -54,12 +55,12 @@ class SysDept(models.Model):
         null=False,
         blank=False,
         choices=DEPT_STATUS_CHOICES,
-        default=0,
+        default=1,
         verbose_name='部门激活状态',
         help_text='部门激活状态，0：未激活，1：激活',
     )
     
-    deptDesc = models.EmailField(db_column='dept_desc',
+    deptDesc = models.CharField(db_column='dept_desc',
          max_length=128,
          null=False,
          blank=False,

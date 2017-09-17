@@ -39,7 +39,7 @@ CREATE TABLE sys_user (
   user_name varchar(32) NOT NULL COMMENT '用户姓名',
   user_pwd varchar(64) NOT NULL COMMENT '用户密码，加密',
   user_role tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否为项目leader，1：是，0：否',
-  user_mgrid bigint(20) NOT NULL COMMENT '用户领导id，0为管理员用户，自外键',
+--  user_mgrid bigint(20) NOT NULL COMMENT '用户领导id，0为管理员用户，自外键',
   user_status tinyint(4) NOT NULL DEFAULT '1' COMMENT '用户激活状态，0：未激活，1：激活',
   user_email varchar(128) NOT NULL COMMENT '用户邮箱',
   user_phone varchar(11) NOT NULL COMMENT '用户手机号',
@@ -70,12 +70,13 @@ CREATE TABLE sys_group (
 
 
 CREATE TABLE sys_user_group (
-  group_id bigint(20) unsigned NOT NULL COMMENT '主键id 1',
-  user_id bigint(20) unsigned NOT NULL COMMENT '主键id 2',
+  user_group_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+  group_id bigint(20) unsigned NOT NULL COMMENT '用户组id',
+  user_id bigint(20) unsigned NOT NULL COMMENT '用户id',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-  PRIMARY KEY (group_id, user_id)
+  PRIMARY KEY (user_group_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '员工项目组关联表';
 
 
@@ -110,32 +111,35 @@ CREATE TABLE sys_role (
 
 
 CREATE TABLE sys_role_menu (
+  role_menu_id bigint(20)  unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   role_id bigint(20) unsigned NOT NULL COMMENT '主键id 1',
   menu_id bigint(20) unsigned NOT NULL COMMENT '主键id 2',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-  PRIMARY KEY (role_id, menu_id)
+  PRIMARY KEY (role_menu_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '角色菜单关联表';
 
 
 CREATE TABLE sys_group_role (
+  group_role_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   group_id bigint(20) unsigned NOT NULL COMMENT '主键id 1',
   role_id bigint(20) unsigned NOT NULL COMMENT '主键id 2',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-  PRIMARY KEY (group_id, role_id)
+  PRIMARY KEY (group_role_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '用户角色关联表';
 
 
 CREATE TABLE sys_group_service (
+  group_service_id bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键id',
   group_id bigint(20) unsigned NOT NULL COMMENT '主键id 1',
   service_id bigint(20) unsigned NOT NULL COMMENT '主键id 2',
   is_del tinyint(4) NOT NULL DEFAULT '0' COMMENT '该记录是否被删除，0：未删除，1：已删除，默认为0',
   created_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录创建时间',
   updated_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '记录最后更新时间',
-  PRIMARY KEY (group_id, service_id)
+  PRIMARY KEY (group_service_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 comment '用户服务关联表';
 
 

@@ -5,7 +5,7 @@
 Created on 2017-09-08
 
 @Author: XinPeng
-@Description: menu model
+@Description: role menu model
 '''
 
 
@@ -26,7 +26,12 @@ IS_DEL_CHOICES = (
 )
 
 class SysRoleMenu(models.Model):
-
+    roleMenuId = models.BigAutoField(db_column='role_menu_id', 
+        primary_key=True, 
+        verbose_name='主键ID', 
+        help_text='主键自增ID',
+    )
+    
     roleId = models.ForeignKey(SysRole, 
         on_delete=models.CASCADE,
         db_column='role_id',

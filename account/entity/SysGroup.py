@@ -51,7 +51,7 @@ class SysGroup(models.Model):
         help_text='项目组状态，0：不可用，1：可用',
     )
     
-    groupDesc = models.EmailField(db_column='group_desc',
+    groupDesc = models.CharField(db_column='group_desc',
          max_length=128,
          null=False,
          blank=False,
